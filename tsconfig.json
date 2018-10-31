@@ -5,7 +5,8 @@
     "outDir": "dist",
     "strict": true,
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "lib": [
       "es2018"

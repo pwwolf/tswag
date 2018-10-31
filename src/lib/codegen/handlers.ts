@@ -8,7 +8,7 @@ import {
   ResponseObject,
   PathItemObject
 } from "@loopback/openapi-v3-types";
-import convertJsonToLiteral from "../tsutil";
+import { convertJsonToLiteral } from "../tsutil";
 import { convertPathToExpress } from "../expressutil";
 import { generateTypeNode } from "./models";
 import { isReferenceObject } from "../loopback/util";

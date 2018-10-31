@@ -9,7 +9,7 @@ import * as ts from "typescript";
  * And converts it into a typescript expression
  * @param json
  */
-export default function convertJsonToLiteral(json?: any): ts.Expression {
+export function convertJsonToLiteral(json?: any): ts.Expression {
   if (typeof json === "undefined") {
     return ts.createIdentifier("undefined");
   }
