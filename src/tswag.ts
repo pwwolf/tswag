@@ -100,14 +100,19 @@ export function wireHandler(
       respCode.charAt(0).toUpperCase() + respCode.slice(1);
 
     let methodName = `send${respCodeUpperCase}`;
-    console.log("Wire up ", methodName);
+    //console.log("Wire up ", methodName);
     context[methodName] = (responseObject: any) => {
-      console.log("Got response", responseObject);
+      // console.log("Got response", responseObject);
       //TODO: validate response
       res.json(responseObject);
     };
 
     let respObject = operation.responses[respCode] as ResponseObject;
+  }
+
+  //The handler function can be left undefined
+  if (!handler) {
+    return next(new Error(`Operation ${op.operationId} not yet implemented.`));
   }
 
   handler(context);

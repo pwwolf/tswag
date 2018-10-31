@@ -261,7 +261,7 @@ function createPropertySignatureForRestMethod(operation: OperationObject) {
   let node = ts.createPropertySignature(
     undefined,
     ts.createStringLiteral(opId),
-    undefined,
+    ts.createToken(ts.SyntaxKind.QuestionToken), //a given handler is set to optional to make dev easier
     type,
     undefined
   );
