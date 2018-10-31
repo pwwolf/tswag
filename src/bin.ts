@@ -9,7 +9,7 @@ import { stat } from "fs";
 const argv = minimist(process.argv.slice(2));
 
 if (argv._.length < 1) {
-  console.warn("");
+  console.warn("Must provide path to OpenAPI spec as an argument");
   process.exit(0);
 }
 
