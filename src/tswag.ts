@@ -49,6 +49,9 @@ export function wireHandler(
   next: NextFunction,
   handler: any
 ) {
+  if (version !== 1) {
+    throw new Error("Invalid version number: " + version);
+  }
   let op = operation as OperationObject;
   let parameters: any = {};
 

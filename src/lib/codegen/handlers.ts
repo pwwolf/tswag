@@ -13,6 +13,9 @@ import { convertPathToExpress } from "../expressutil";
 import { generateTypeNode } from "./models";
 import { isReferenceObject } from "../loopback/util";
 
+//Version is checked at express runtime by wireHandlers
+const API_VERSION = 1;
+
 /**
  * Creates a call that looks like
  *
@@ -89,7 +92,7 @@ function createRequestMethodBody(
         //Create a call to wireHandler(version, req, res, next, handler[operationId])
         ts.createExpressionStatement(
           ts.createCall(ts.createIdentifier("wireHandler"), undefined, [
-            ts.createNumericLiteral("1"),
+            ts.createNumericLiteral(String(API_VERSION)),
             ts.createIdentifier(swagVariableName),
             ts.createIdentifier("req"),
             ts.createIdentifier("res"),
