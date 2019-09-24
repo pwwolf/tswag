@@ -25,7 +25,7 @@ function printNode(node: ts.Node) {
 
 export function generateApi(spec: OpenApiSpec, deref: OpenApiSpec) {
   //create imports
-  let imports = ts.createImportDeclaration(
+  let tswagImport = ts.createImportDeclaration(
     undefined,
     undefined,
     ts.createImportClause(
@@ -36,6 +36,17 @@ export function generateApi(spec: OpenApiSpec, deref: OpenApiSpec) {
     ),
     //ts.createImportSpecifier(ts.createIdentifier("wireHandler"))
     ts.createStringLiteral("tswag")
+  );
+
+  let expressImport = ts.createImportDeclaration(
+    undefined,
+    undefined,
+    ts.createImportClause(
+      undefined,
+      ts.createNamespaceImport(ts.createIdentifier("express"))
+    ),
+    //ts.createImportSpecifier(ts.createIdentifier("wireHandler"))
+    ts.createStringLiteral("express")
   );
 
   let modelsDeclarations = [];
@@ -68,6 +79,7 @@ export function generateApi(spec: OpenApiSpec, deref: OpenApiSpec) {
     ts.createModuleBlock([...modelsDeclarations, regHandlersFunc]),
     undefined
   );
-  printNode(imports);
+  printNode(tswagImport);
+  printNode(expressImport);
   printNode(module);
 }

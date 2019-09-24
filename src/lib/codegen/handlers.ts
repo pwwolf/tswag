@@ -44,7 +44,7 @@ function createRequestMethodBody(
         undefined,
         "req",
         undefined,
-        ts.createTypeReferenceNode("any", undefined),
+        undefined,
         undefined
       ),
       ts.createParameter(
@@ -53,7 +53,7 @@ function createRequestMethodBody(
         undefined,
         "res",
         undefined,
-        ts.createTypeReferenceNode("any", undefined),
+        undefined,
         undefined
       ),
       ts.createParameter(
@@ -62,7 +62,7 @@ function createRequestMethodBody(
         undefined,
         "next",
         undefined,
-        ts.createTypeReferenceNode("any", undefined),
+        undefined,
         undefined
       )
     ],
@@ -191,6 +191,15 @@ function createPropertySignatureForRestMethod(operation: OperationObject) {
           undefined,
           undefined,
           undefined,
+          "statusCode",
+          undefined,
+          ts.createTypeReferenceNode("number", undefined),
+          undefined
+        ),
+        ts.createParameter(
+          undefined,
+          undefined,
+          undefined,
           paramName,
           undefined,
           respTypeRef,
@@ -306,7 +315,10 @@ export function createRegisterHandlersFunction(
         undefined,
         "router",
         undefined,
-        ts.createTypeReferenceNode("any", undefined)
+        ts.createTypeReferenceNode(
+          ts.createQualifiedName(ts.createIdentifier("express"), "IRouter"),
+          [ts.createTypeReferenceNode("any", undefined)]
+        )
       ),
       ts.createParameter(
         undefined,

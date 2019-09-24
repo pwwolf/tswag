@@ -101,10 +101,10 @@ export function wireHandler(
 
     let methodName = `send${respCodeUpperCase}`;
     //console.log("Wire up ", methodName);
-    context[methodName] = (responseObject: any) => {
+    context[methodName] = (statusCode: number, responseObject: any) => {
       // console.log("Got response", responseObject);
       //TODO: validate response
-      res.json(responseObject);
+      res.status(statusCode).json(responseObject);
     };
 
     let respObject = operation.responses[respCode] as ResponseObject;
