@@ -6,12 +6,12 @@ import {
   ParameterObject,
   OperationObject,
   ResponseObject,
-  PathItemObject
+  PathItemObject,
+  isReferenceObject
 } from "@loopback/openapi-v3-types";
 import { convertJsonToLiteral } from "../tsutil";
 import { convertPathToExpress } from "../expressutil";
 import { generateTypeNode } from "./models";
-import { isReferenceObject } from "../loopback/util";
 
 //Version is checked at express runtime by wireHandlers
 const API_VERSION = 1;

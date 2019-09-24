@@ -7,8 +7,8 @@ import {
   RequestBodyObject
 } from "@loopback/openapi-v3-types";
 import { NextFunction, Request, Response } from "express";
-import { coerceParameter } from "./lib/loopback/coercion";
 import { validateRequestBody } from "./lib/loopback/body.validator";
+import { coerceParameter } from "./lib/loopback/coercion";
 
 function castParameter(
   queryElement: any,
