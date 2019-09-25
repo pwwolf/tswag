@@ -1,7 +1,5 @@
 import * as ts from "typescript";
 import {
-  SchemaObject,
-  ReferenceObject,
   OpenApiSpec,
   ParameterObject,
   OperationObject,
@@ -290,9 +288,17 @@ export function createRegisterHandlersFunction(
     let pathItem = spec.paths[path] as PathItemObject;
     for (let method of ["get", "put", "delete", "post", "patch"]) {
       if (pathItem[method]) {
-        restMethodSignatures.push(
-          createPropertySignatureForRestMethod(pathItem[method])
+        let propSig = createPropertySignatureForRestMethod(pathItem[method]);
+
+        //typescript doesn't properly support jsdoc comments yet
+        //https://github.com/microsoft/TypeScript/issues/17146
+        ts.addSyntheticLeadingComment(
+          propSig,
+          ts.SyntaxKind.MultiLineCommentTrivia,
+          `*\n * ${method.toUpperCase()} ${path}\n `,
+          true
         );
+        restMethodSignatures.push(propSig);
         restMethodBody.push(
           //Use the dereferenced version for this because we don't want any references in the embedded operation schema
           createRequestMethodBody(
