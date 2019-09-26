@@ -10,37 +10,6 @@ import { NextFunction, Request, Response } from "express";
 import { validateRequestBody } from "./lib/loopback/body.validator";
 import { coerceParameter } from "./lib/loopback/coercion";
 
-function castParameter(
-  queryElement: any,
-  schema?: SchemaObject | ReferenceObject
-) {
-  if (!schema) {
-    return queryElement;
-  }
-  if (typeof queryElement === "undefined") {
-    return undefined;
-  }
-
-  if (schema.hasOwnProperty("$ref")) {
-    throw new Error("Refs in parameters are not supported");
-  }
-
-  let schemaObject = schema as SchemaObject;
-  if (!schemaObject.type) {
-    return queryElement || schemaObject.default;
-  }
-
-  if (schemaObject.type === "integer") {
-    return Number(queryElement) || schemaObject.default;
-  }
-
-  if (schemaObject.type === "boolean") {
-    return Boolean(queryElement) || schemaObject.default;
-  }
-
-  return queryElement;
-}
-
 export function wireHandler(
   version: number,
   operation: any,
