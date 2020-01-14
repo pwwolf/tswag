@@ -3,13 +3,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {
-  isReferenceObject,
-  ParameterObject,
-  SchemaObject
-} from "@loopback/openapi-v3";
-import * as debugModule from "debug";
 import { RestHttpErrors } from "./http-errors";
+import { ParameterObject, isReferenceObject, SchemaObject } from "openapi3-ts";
 const isRFC3339 = require("validator/lib/isRFC3339");
 
 /**

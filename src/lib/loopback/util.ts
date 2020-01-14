@@ -1,4 +1,4 @@
-import { SchemaObject, ReferenceObject } from "@loopback/openapi-v3-types";
+import { SchemaObject, ReferenceObject } from "openapi3-ts";
 
 export function isSchemaObject(
   schema: SchemaObject | ReferenceObject

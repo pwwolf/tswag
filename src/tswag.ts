@@ -1,14 +1,12 @@
-import {
-  OperationObject,
-  ParameterObject,
-  ResponseObject,
-  SchemaObject,
-  ReferenceObject,
-  RequestBodyObject
-} from "@loopback/openapi-v3-types";
 import { NextFunction, Request, Response } from "express";
 import { validateRequestBody } from "./lib/loopback/body.validator";
 import { coerceParameter } from "./lib/loopback/coercion";
+import {
+  ParameterObject,
+  RequestBodyObject,
+  ResponseObject,
+  OperationObject
+} from "openapi3-ts";
 
 export function wireHandler(
   version: number,

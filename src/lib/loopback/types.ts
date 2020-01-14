@@ -3,15 +3,9 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import { ReferenceObject, SchemaObject } from "@loopback/openapi-v3";
 import * as ajv from "ajv";
-import {
-  Options,
-  OptionsJson,
-  OptionsText,
-  OptionsUrlencoded
-} from "body-parser";
 import { Request, Response } from "express";
+import { SchemaObject, ReferenceObject } from "openapi3-ts";
 
 export { Request, Response };
 

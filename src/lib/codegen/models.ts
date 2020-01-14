@@ -1,9 +1,5 @@
 import * as ts from "typescript";
-import {
-  SchemaObject,
-  ReferenceObject,
-  isReferenceObject
-} from "@loopback/openapi-v3-types";
+import { ReferenceObject, SchemaObject, isReferenceObject } from "openapi3-ts";
 
 /**
  * Create a type reference node for the given ref.

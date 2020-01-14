@@ -1,15 +1,15 @@
 import * as ts from "typescript";
-import {
-  OpenApiSpec,
-  ParameterObject,
-  OperationObject,
-  ResponseObject,
-  PathItemObject,
-  isReferenceObject
-} from "@loopback/openapi-v3-types";
 import { convertJsonToLiteral } from "../tsutil";
 import { convertPathToExpress } from "../expressutil";
 import { generateTypeNode } from "./models";
+import {
+  ParameterObject,
+  isReferenceObject,
+  OperationObject,
+  ResponseObject,
+  PathItemObject,
+  OpenAPIObject
+} from "openapi3-ts";
 
 //Version is checked at express runtime by wireHandlers
 const API_VERSION = 1;
@@ -279,8 +279,8 @@ function createPropertySignatureForRestMethod(operation: OperationObject) {
 }
 
 export function createRegisterHandlersFunction(
-  spec: OpenApiSpec,
-  dereferencedSpec: OpenApiSpec
+  spec: OpenAPIObject,
+  dereferencedSpec: OpenAPIObject
 ) {
   let restMethodSignatures = [];
   let restMethodBody = [];
@@ -295,7 +295,8 @@ export function createRegisterHandlersFunction(
         ts.addSyntheticLeadingComment(
           propSig,
           ts.SyntaxKind.MultiLineCommentTrivia,
-          `*\n * ${method.toUpperCase()} ${path}\n `,
+          `*\n * ${method.toUpperCase()} ${path}\n${pathItem[method]
+            .description || ""}\n `,
           true
         );
         restMethodSignatures.push(propSig);

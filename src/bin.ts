@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import { bundle, dereference } from "swagger-parser";
-import { OpenApiSpec } from "@loopback/openapi-v3-types";
 import { generateApi } from "./lib/codegen/generator";
 import * as minimist from "minimist";
 import { stat } from "fs";
+import { OpenAPIObject } from "openapi3-ts";
 const converter = require("swagger2openapi");
 
 const argv = minimist(process.argv.slice(2));
@@ -27,7 +27,7 @@ stat(argv._[0], async (err, stats) => {
     result = await bundle(doc as any);
   }
   let deref = await dereference(result);
-  generateApi(result as OpenApiSpec, deref as OpenApiSpec);
+  generateApi(result as OpenAPIObject, deref as OpenAPIObject);
 });
 
 async function convertSwaggerToOpenApi(doc: any) {

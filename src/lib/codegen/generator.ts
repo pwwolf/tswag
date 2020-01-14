@@ -1,11 +1,7 @@
-import {
-  SchemaObject,
-  ReferenceObject,
-  OpenApiSpec
-} from "@loopback/openapi-v3-types";
 import * as ts from "typescript";
 import { generateTypeNode } from "./models";
 import { createRegisterHandlersFunction } from "./handlers";
+import { OpenAPIObject } from "openapi3-ts";
 
 const resultFile = ts.createSourceFile(
   "api.ts",
@@ -23,7 +19,7 @@ function printNode(node: ts.Node) {
   console.log(result);
 }
 
-export function generateApi(spec: OpenApiSpec, deref: OpenApiSpec) {
+export function generateApi(spec: OpenAPIObject, deref: OpenAPIObject) {
   //create imports
   let tswagImport = ts.createImportDeclaration(
     undefined,
