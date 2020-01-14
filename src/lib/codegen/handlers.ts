@@ -327,7 +327,7 @@ export function createRegisterHandlersFunction(
         undefined,
         ts.createTypeReferenceNode(
           ts.createQualifiedName(ts.createIdentifier("express"), "IRouter"),
-          [ts.createTypeReferenceNode("any", undefined)]
+          []
         )
       ),
       ts.createParameter(
