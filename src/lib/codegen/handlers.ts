@@ -124,20 +124,9 @@ function createRequestMethodBody(
   return ts.createExpressionStatement(expressRegCall);
 }
 
-/**
- * For a given operation, which represents a particular HTTP URL and method,
- * create the signature. For example, an operation GET /pets with an operationId
- * of findPets, this will create
- *
- * findPets: (ctx: {parameters: {...}, send200: (response: Pet[]) => void, sendDefault: (response: Error) => void}
- * @param operation
- */
-function createPropertySignatureForRestMethod(operation: OperationObject) {
-  let opId = operation.operationId;
-  if (!opId) {
-    throw new Error("Missing operation ID");
-  }
-
+// In the example below, this generates the type for ctx param
+// findPets: (ctx: {parameters: {...}, send200: (response: Pet[]) => void, sendDefault: (response: Error) => void}
+function createPropertySignatureTypeForRestMethod(operation: OperationObject) {
   let params: ts.PropertySignature[] = (operation.parameters || []).map(
     param => {
       //TODO: Could be a reference
@@ -252,6 +241,29 @@ function createPropertySignatureForRestMethod(operation: OperationObject) {
     );
   }
   let ctxType = ts.createTypeLiteralNode([paramProp, ...reqBody, ...respProps]);
+  return ctxType;
+}
+
+/**
+ * For a given operation, which represents a particular HTTP URL and method,
+ * create the signature. For example, an operation GET /pets with an operationId
+ * of findPets, this will create
+ *
+ * findPets: (ctx: FindPetsParam)
+ * //Where FindPetsParam = {parameters: {...}, send200: (response: Pet[]) => void, sendDefault: (response: Error) => void}
+ * @param operation
+ */
+function createPropertySignatureForRestMethod(operation: OperationObject) {
+  let opId = operation.operationId;
+  if (!opId) {
+    throw new Error("Missing operation ID");
+  }
+
+  //let ctxType = createPropertySignatureTypeForRestMethod(operation)
+  let ctxType = ts.createTypeReferenceNode(
+    convertOperationIdToTypeName(opId),
+    undefined
+  );
 
   let type = ts.createFunctionTypeNode(
     undefined,
@@ -276,6 +288,37 @@ function createPropertySignatureForRestMethod(operation: OperationObject) {
     undefined
   );
   return node;
+}
+
+//convert an operation ID into a suitable type name
+function convertOperationIdToTypeName(operationId: string) {
+  let str = operationId;
+  //capitalize first letter
+  str = str.replace(/^\w/, c => c.toUpperCase());
+
+  //If there are spaces, remove them but capitalize each segment
+  str = str
+    .split(" ")
+    .map(s => s.replace(/^\w/, c => c.toUpperCase()))
+    .join("");
+  return `${str}Param`;
+}
+
+export function createHandlerContextModels(spec: OpenAPIObject) {
+  let typeList: { name: string; type: ts.TypeLiteralNode }[] = [];
+  for (let path of Object.keys(spec.paths)) {
+    let pathItem = spec.paths[path] as PathItemObject;
+    for (let method of ["get", "put", "delete", "post", "patch"]) {
+      if (pathItem[method] && pathItem[method].operationId) {
+        let typeName = convertOperationIdToTypeName(
+          pathItem[method].operationId
+        );
+        let type = createPropertySignatureTypeForRestMethod(pathItem[method]);
+        typeList.push({ name: typeName, type });
+      }
+    }
+  }
+  return typeList;
 }
 
 export function createRegisterHandlersFunction(
