@@ -81,7 +81,7 @@ const DEFAULT_COMPILED_SCHEMA_CACHE = new WeakMap<
  * @param globalSchemas - Schema references.
  * @param options - Request body validation options.
  */
-function validateValueAgainstSchema(
+export function validateValueAgainstSchema(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any,
   schema: SchemaObject | ReferenceObject,

@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { validateRequestBody } from "./lib/loopback/body.validator";
+import {
+  validateRequestBody,
+  validateValueAgainstSchema
+} from "./lib/loopback/body.validator";
 import { coerceParameter } from "./lib/loopback/coercion";
 import {
   ParameterObject,
@@ -73,11 +76,27 @@ export function wireHandler(
     //console.log("Wire up ", methodName);
     context[methodName] = (statusCode: number, responseObject: any) => {
       // console.log("Got response", responseObject);
-      //TODO: validate response
       res.status(statusCode).json(responseObject);
+      let respObject = operation.responses[respCode] as ResponseObject;
+      //TODO: Make this configurable and decide how to surface error
+      try {
+        if (
+          respObject.content &&
+          respObject.content["application/json"] &&
+          respObject.content["application/json"].schema
+        ) {
+          validateValueAgainstSchema(
+            responseObject,
+            respObject.content["application/json"].schema,
+            {},
+            //Currently ajv doesn't support int64 or int32, so ignore for now
+            { unknownFormats: ["int64", "int32"] }
+          );
+        }
+      } catch (err) {
+        console.warn(err);
+      }
     };
-
-    let respObject = operation.responses[respCode] as ResponseObject;
   }
 
   //The handler function can be left undefined
