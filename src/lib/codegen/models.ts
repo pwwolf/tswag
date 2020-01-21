@@ -89,7 +89,13 @@ export function generateTypeNode(
     return ts.createTypeReferenceNode("number", undefined);
   } else if (schemaObject.type === "boolean") {
     return ts.createTypeReferenceNode("boolean", undefined);
+  } else if (schemaObject.enum) {
+    return ts.createUnionTypeNode(
+      schemaObject.enum.map(e => {
+        return ts.createLiteralTypeNode(ts.createStringLiteral(e));
+      })
+    );
   } else {
-    throw new Error("Unknown property type: " + schemaObject.type);
+    throw new Error("Unknown property type: " + JSON.stringify(schemaObject));
   }
 }
