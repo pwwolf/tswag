@@ -1,17 +1,19 @@
 {
   "name": "tstub",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/jest"
+    "test": "node_modules/.bin/jest",
+    "prepublish": "npm run tsc"
   },
   "bin": {
-    "ts-node": "dist/bin.js"
+    "tstub": "dist/bin.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Patrick Wolf <patrick@wolfmail.io>",
   "license": "ISC",
+  "main": "dist/bin.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
