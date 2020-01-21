@@ -82,7 +82,10 @@ export function generateTypeNode(
     return ts.createArrayTypeNode(generateTypeNode(schemaObject.items));
   } else if (schemaObject.type === "string") {
     return ts.createTypeReferenceNode("string", undefined);
-  } else if (schemaObject.type === "integer") {
+  } else if (
+    schemaObject.type === "integer" ||
+    schemaObject.type === "number"
+  ) {
     return ts.createTypeReferenceNode("number", undefined);
   } else if (schemaObject.type === "boolean") {
     return ts.createTypeReferenceNode("boolean", undefined);
