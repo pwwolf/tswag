@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "node_modules/.bin/jest",
-    "prepublish": "npm run tsc"
+    "prepublish": "npx tsc"
   },
   "bin": {
     "tstub": "dist/bin.js"
@@ -12,8 +12,8 @@
   "keywords": [],
   "author": "Patrick Wolf <patrick@wolfmail.io>",
   "license": "ISC",
-  "main": "dist/bin.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/tstub.js",
+  "types": "dist/tstub.d.ts",
   "dependencies": {
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.2",
