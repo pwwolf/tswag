@@ -1,15 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import {
-  validateRequestBody,
-  validateValueAgainstSchema
-} from "./lib/loopback/body.validator";
+import { validateValueAgainstSchema } from "./lib/loopback/body.validator";
 import { coerceParameter } from "./lib/loopback/coercion";
 import {
   ParameterObject,
   RequestBodyObject,
   ResponseObject,
-  OperationObject
+  OperationObject,
+  SchemaObject
 } from "openapi3-ts";
+import { RequestBodyValidationOptions } from "./lib/loopback/types";
+
+const validationOptions: RequestBodyValidationOptions = {
+  //Currently ajv doesn't support int64 or int32, so ignore for now
+  unknownFormats: ["int64", "int32"]
+};
 
 export function wireHandler(
   version: number,
@@ -26,8 +30,21 @@ export function wireHandler(
   let parameters: any = {};
 
   if (op.requestBody) {
-    //TODO - catch error
-    validateRequestBody(req.body, op.requestBody as RequestBodyObject);
+    let reqBody = op.requestBody as RequestBodyObject;
+    try {
+      if (reqBody.required === true) {
+        validateValueAgainstSchema(
+          req.body,
+          reqBody.content["application/json"].schema as SchemaObject,
+          {},
+          validationOptions
+        );
+      }
+    } catch (err) {
+      return res
+        .status(422)
+        .json({ message: "validation error", details: err.details });
+    }
   }
 
   for (let param of op.parameters || []) {
@@ -89,8 +106,7 @@ export function wireHandler(
             responseObject,
             respObject.content["application/json"].schema,
             {},
-            //Currently ajv doesn't support int64 or int32, so ignore for now
-            { unknownFormats: ["int64", "int32"] }
+            validationOptions
           );
         }
       } catch (err) {
