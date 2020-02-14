@@ -6,6 +6,9 @@ import {
 } from "./handlers";
 import { OpenAPIObject } from "openapi3-ts";
 
+type WritableStream = {
+  write: (chunk: any) => any;
+};
 const resultFile = ts.createSourceFile(
   "api.ts",
   "",
@@ -17,12 +20,16 @@ const printer = ts.createPrinter({
   newLine: ts.NewLineKind.LineFeed
 });
 
-function printNode(node: ts.Node) {
+function printNode(node: ts.Node, out: WritableStream) {
   const result = printer.printNode(ts.EmitHint.Unspecified, node, resultFile);
-  console.log(result);
+  out.write(result);
 }
 
-export function generateApi(spec: OpenAPIObject, deref: OpenAPIObject) {
+export function generateApi(
+  spec: OpenAPIObject,
+  deref: OpenAPIObject,
+  out: WritableStream
+) {
   //create imports
   let tstubImport = ts.createImportDeclaration(
     undefined,
@@ -89,7 +96,7 @@ export function generateApi(spec: OpenAPIObject, deref: OpenAPIObject) {
     ts.createModuleBlock([...modelsDeclarations, regHandlersFunc]),
     undefined
   );
-  printNode(tstubImport);
-  printNode(expressImport);
-  printNode(module);
+  printNode(tstubImport, out);
+  printNode(expressImport, out);
+  printNode(module, out);
 }
