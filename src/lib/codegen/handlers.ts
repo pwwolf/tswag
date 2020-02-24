@@ -321,6 +321,36 @@ export function createHandlerContextModels(spec: OpenAPIObject) {
   return typeList;
 }
 
+//Creates an export const operationIds = ['a', 'b', 'c']
+export function createOperationIdArray(spec: OpenAPIObject) {
+  let opList: string[] = [];
+  for (let path of Object.keys(spec.paths)) {
+    let pathItem = spec.paths[path] as PathItemObject;
+    for (let method of ["get", "put", "delete", "post", "patch"]) {
+      if (pathItem[method] && pathItem[method].operationId) {
+        opList.push(pathItem[method].operationId);
+      }
+    }
+  }
+
+  return ts.createVariableStatement(
+    [ts.createModifier(ts.SyntaxKind.ExportKeyword)],
+    ts.createVariableDeclarationList(
+      [
+        ts.createVariableDeclaration(
+          ts.createIdentifier("operationIds"),
+          undefined,
+          ts.createArrayLiteral(
+            opList.map(op => ts.createStringLiteral(op)),
+            false
+          )
+        )
+      ],
+      ts.NodeFlags.Const
+    )
+  );
+}
+
 export function createRegisterHandlersFunction(
   spec: OpenAPIObject,
   dereferencedSpec: OpenAPIObject

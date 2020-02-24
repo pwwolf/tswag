@@ -2,7 +2,8 @@ import * as ts from "typescript";
 import { generateTypeNode } from "./models";
 import {
   createRegisterHandlersFunction,
-  createHandlerContextModels
+  createHandlerContextModels,
+  createOperationIdArray
 } from "./handlers";
 import { OpenAPIObject } from "openapi3-ts";
 
@@ -75,6 +76,7 @@ export function generateApi(
   }
 
   const regHandlersFunc = createRegisterHandlersFunction(spec, deref);
+  const opIds = createOperationIdArray(spec);
   const contextTypes = createHandlerContextModels(spec);
   for (let entry of contextTypes) {
     let declaration = ts.createTypeAliasDeclaration(
@@ -93,7 +95,7 @@ export function generateApi(
     undefined,
     [ts.createModifier(ts.SyntaxKind.ExportKeyword)],
     ts.createIdentifier(namespace),
-    ts.createModuleBlock([...modelsDeclarations, regHandlersFunc]),
+    ts.createModuleBlock([...modelsDeclarations, regHandlersFunc, opIds]),
     undefined
   );
   printNode(tstubImport, out);
