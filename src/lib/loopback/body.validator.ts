@@ -4,10 +4,8 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import * as AJV from "ajv";
-import * as util from "util";
 import { RestHttpErrors } from "./http-errors";
 import { RequestBodyValidationOptions } from "./types";
-import * as _ from "lodash";
 import * as HttpErrors from "http-errors";
 import {
   SchemaObject,
@@ -106,7 +104,7 @@ export function validateValueAgainstSchema(
   const validationErrors = validate.errors;
 
   const error = RestHttpErrors.invalidRequestBody();
-  error.details = _.map(validationErrors, (e: any) => {
+  error.details = validationErrors?.map((e: any) => {
     return {
       path: e.dataPath,
       code: e.keyword,
